@@ -49,13 +49,13 @@ include Virtuozzo
 		
 		def keycreate
 			@result=@server.call("partner10.createKey",
-				@AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
+				@AuthInfo.new("eboundhost","#{password}"),
 				@ServerAddress.new([],[]),
 				'eboundhost.com',
 				'PLESK_95_FOR_VZ',
 				["#{@params["license_type"]}"]) #set variable here
 			@call=@server.call("partner10.retrieveKey",
-				@AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
+				@AuthInfo.new("eboundhost","#{password}"),
 				"#{@result['mainKeyNumber']}"
 				)
 			@license=Base64.encode64(@call['key'])
