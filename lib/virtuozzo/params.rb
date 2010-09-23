@@ -2,15 +2,6 @@ require 'json'
 module Virtuozzo
 class Params
 	attr_accessor :params
-	#def self.setup(mode)
-	#	if mode=="sync" then return @params={"mode" =>"sync"} end
-	#	Virtuozzo::Params::new do
-	#		add(:node) {Tblservers.where("id=#{@params["serverid"]}").select("name").first.name}
-         #              	add(:package) {Tblproducts.where("id=#{@params["packageid"]}").select("name").first.name.sub(/\-.*/,'').sub(/\s/,'').upcase}
-	#		buildparam
-	#		send(mode)
-	#	end
-	#end
 	def initialize(mode,&block)
 		if mode=="sync" then return @params={"mode" => "sync"} end
 		@addons={} 
