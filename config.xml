@@ -1,0 +1,11 @@
+<?xml version='1.0' standalone='yes'?>
+<configuration>
+  <dbtype>mysql</dbtype>
+  <host>localhost</host>
+  <user>whmcs</user>
+  <db>whmcs</db>
+  <pass>whmcsfinal123</pass>
+  <path>/var/www/lighttpd/whmcs/modules/servers/virtuozzo/</path>
+  <whmcsuser>wallywest</whmcsuser>
+  <whmcspass>wallywest!@#</whmcspass>
+</configuration>

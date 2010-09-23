@@ -1,0 +1,17 @@
+#!/bin/bash
+mkdir /root/cpanel_profile
+source='http://216.14.112.253/cpanel'
+yum install gcc -y
+(echo n;echo o conf prerequisites_policy follow;echo o conf commit)|cpan
+cpan install YAML::Syck
+wget -O /root/cpanel_profile/cpanel.config $source/cpanel.config
+wget -O /etc/cp_easyapache_profile.yaml $source/pre_apache_install.yaml
+wget httpupdate.cpanel.net/latest
+veid=`cat /proc/vz/veinfo | awk '{print $1}'`
+sh latest && mail -s "VPS $veid is done installing" level2@eboundhost.com </var/log/cpanel-install-thread1.log -- -f level2@eboundhost.com
+wget -O /etc/cpbackup-exclude.conf $source/cpbackup.exclude.conf
+rm latest
+rm -rf installd
+rm -rf cpanel_profile
+rm cpanelinstall
+rm /etc/cron.daily/mlocate.cron

@@ -1,0 +1,140 @@
+module Virtuozzo
+module IP
+module Generator
+		def self.buildips(ips_left,*inputcclass)
+			$max ||= 0
+			$ipsused ||= {}
+			@left=ips_left
+			puts "retreiving #{ips_left} ips"
+			@inputcclass=inputcclass
+			p @inputcclass
+			@maxipgroup=2
+			@temp={}
+			
+			p "RUNNING CHECK"
+			#CHECK FOR EMPTY IPPOOL
+			check
+			if !inputcclass[0].nil? and Iprange.joins(:ippool).where("ipranges.cblock='#{inputcclass[0]}' and ip_group != 0").first.nil? then inputcclass[0]=nil end
+			p "RUNNING GAVAIL"
+			#CHOOSE BEST CCLASS TO USE
+			bestcandidate
+			
+			## CHECK FOR CASES WHEN WE NEED TO BREAK UP IP GROUPS
+			if @avail[@cclasstouse].include?(@left)
+                       		 @group=@left
+       			else
+				if @left < @avail[@cclasstouse].last
+                                	splitips(@left,@cclasstouse)
+                                	@group=@left
+                        	else
+                                	@group=@avail[@cclasstouse].last
+                        	end
+       			 end
+			 ## IF REQUESTED VALUE IS GREATHER THEN MAX VALUE THEN TRY TO FIND CONSECUTIVE IPS
+       			 if @left > @maxipgroup then consecutiveip(@left,@cclasstouse) end
+			 @q=Iprange.get_by_ipgroup("#{@cclasstouse}",@group)
+			 @ipremaining=@left-@group
+			 $ipsused[@q.cblock] ||= []
+			 @q.ips.split(/\s/).each do |x| 
+				$ipsused[@q.cblock] << x.to_i
+				$ipsused[@q.cblock].sort!
+			 end
+			 p $ipsused
+			 puts "ips remaining #{@ipremaining}"
+                         Ippool.update(@q.id, :ip_group => '0')
+		  	 if @ipremaining <= 0
+			 	puts "IPS USED"
+				#resultparser 
+				p $ipsused
+				return @ips
+			 end
+			 buildips(@ipremaining,@q.cblock)
+		end
+		def self.check
+			puts "CHECK IF WE HAVE IPS"
+          		@totalips=0
+			1.upto(2) do |x|
+        			count=Ippool.where("ip_group=#{x}").count * x
+			        @totalips=count+@totalips
+			end
+			if @totalips < @left.to_i
+                		puts "not enough ips for this action, only #{@totalips} ip left"
+                		exit
+			end
+			puts "total ips are #{@totalips}"
+		end
+		def self.bestcandidate
+                                @avail={}
+                                @iplist=Iprange.joins(:ippool).where("ippool.ip_group != '0'").select("DISTINCT(ipranges.cblock),ippool.ip_group")
+                                @iplist.each do |x|
+					@avail[x.cblock] ||= []
+                                        @avail[x.cblock] << x.ip_group.to_i
+                                        @avail[x.cblock].sort!
+					p @avail
+                                        if @inputcclass[0].nil?
+                                                if @avail[x.cblock].size >= $max
+                                                        @cclasstouse=x.cblock
+							puts "using cblock #{@cclasstouse}"
+                                                        $max=@avail[x.cblock].size
+                                                end
+                                        end
+                                end
+				p @cclasstouse
+				p @avail
+		end
+		def self.resultparser(&block)
+			firstset=false
+                        @remainingips=""
+			$ipsused.each_pair do |key,value|
+				unless firstset 
+					@firstip="#{key}.#{value.first}"
+					value.delete_at(0)
+					firstset=true
+				end
+				@remainingips=value[0..value.length-1].collect {|x| "#{key}." + x }.join("\s")
+			end
+			@ips={"mainip" => "#{@firstip}","remainingips" => "#{@remainingips}"}
+			Ippool.where("ip_group = '0'").delete_all
+		end
+		
+		def self.consecutiveip(ipmax,cclasstouse)
+			puts "Running consecutive IP parser"
+			puts "checking for consecutive amount: #{ipmax}"
+			@max=ipmax
+			p cclasstouse
+			@save=[]
+			@totalrange=[]
+			@q=Iprange.get_all_cblock("#{cclasstouse}")
+			@q.each do |x|
+				x.ips.split(/\s/).each {|f| @totalrange.sort! << f.to_i}
+			end
+			@totalrange.sort!.each do |value|
+        			@min ||= value
+       				if value - @min == 1
+                			@save << value
+                			@min=value
+      				elsif value - @min > 1
+                			@min=value
+                			@save=[]
+                			@save << value
+       				end
+        			if @save.length==@max then break end
+			end
+			p @save
+			exit
+			if @save.length < @max then return nil end
+			return @save
+		end
+		def self.splitips(ipgroup,cclasstouse)
+                        puts "SPLITTING IPS"
+                        b=@avail[cclasstouse].last
+                        @q=Iprange.joins(:ippool).where("ipranges.cblock='#{cclasstouse}' AND ippool.ip_group='#{b}'").select("ippool.id,ipranges.id AS cid,ippool.ips").first
+                        @ips=@q.ips.split("\s")
+                        Ippool.create(:iprange_id => "#{@q.cid}", :ips => "#{@ips[0,ipgroup].join(",")}",:ip_group => "#{ipgroup}", :exist => '0')
+                        Ippool.create(:iprange_id => "#{@q.cid}", :ips => "#{@ips[ipgroup,b-ipgroup].join(",")}",:ip_group => "#{b-ipgroup}", :exist => '0')
+                        Ippool.delete(@q.id)
+                end
+		attr_reader :ips
+end
+end
+end
