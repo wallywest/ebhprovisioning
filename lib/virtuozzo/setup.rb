@@ -6,8 +6,8 @@ module Virtuozzo
 	                buildparam
 			add("node") {Tblservers.where("id=#{@params["serverid"]}").select("name").first.name}
 	                add("package") {Tblproducts.where("id=#{@params["packageid"]}").select("name").first.name.sub(/\-.*/,'').sub(/\s/,'').upcase}
-			add("mainip")  {Tblhosting.where("id=#{@params["serverid"]}").select("dedicatedip").first.dedicatedip}
-			add("remainingips") {Tblhosting.where("id=#{@params["serverid"]}").select("assignedips").first.assignedips}
+			add("mainip")  {Tblhosting.where("id=#{@params["serviceid"]}").select("dedicatedip").first.dedicatedip}
+			add("remainingips") {Tblhosting.where("id=#{@params["serviceid"]}").select("assignedips").first.assignedips}
 		end	
 		self.send(mode)
 	end

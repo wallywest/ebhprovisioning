@@ -8,6 +8,8 @@ require 'net/ping'
 require 'base64'
 require 'ipaddress'
 require 'eventmachine'
+require 'ipaadr'
+
 %w{log packetgenerator connection panel postsetup setup params revsetup licenses}.each do |file|
         require File.dirname(__FILE__) + '/virtuozzo/' + file
 end

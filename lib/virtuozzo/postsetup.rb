@@ -20,8 +20,6 @@ class PostSetup
 		end
 		
 		def destroy
-			@ips=Vdspool.select("ips").where("eid='#{@params["eid"]}'").first
-		        Virtuozzo::IPool::giveips(@ips.ips)	
 			Vdspool.destroy(@params["id"])
 		end
 		

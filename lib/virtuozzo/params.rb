@@ -49,7 +49,9 @@ class Params
 		end
 		if block.call.class==String then @params[key.to_s]=block.call
 		elsif block.call.class==Hash then @params.merge!(block.call)
-		else @params.merge!(block.call.attributes)
+		else 
+			p block.call.attributes
+			@params.merge!(block.call.attributes)
 		end	
 	end
 	
