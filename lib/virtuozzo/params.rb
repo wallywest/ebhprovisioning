@@ -42,11 +42,11 @@ class Params
 	end
 	
 	def add(key,*options,&block)
-		#if block.call.nil? theni
+		if block.call.nil? then
 		#	p key
 		#	p block.call
-		#	raise "VDSID IS NOT ON THAT NODE" 
-		#end
+			raise "VDSID IS NOT ON THAT NODE" 
+		end
 		if block.call.class==String then @params[key.to_s]=block.call
 		elsif block.call.class==Hash then @params.merge!(block.call)
 		else @params.merge!(block.call.attributes)
@@ -57,19 +57,15 @@ class Params
 		add("VE id") {Vdspool.next_veid.to_s}
 		add("sampleid") { @constants["SAMPLE_EID_#{@params["package"]}_#{@params["panel"]}".to_sym] }
 		add("memup") { @constants["MEMUP_#{@params["package"]}".to_sym] }
-		@iphash=Virtuozzo::IPool::takeips(@constants["IPS_#{@params["package"]}".to_sym],@params["Extra IP (in addition to included ones)"])
-		add("none") { @iphash }
 		
 	end
 	
 	def license
-		#if @params["panel"]=~/100/ then @params["plesk_license"]="100_DOMAINS_FOR_VZ" else @params["plesk_license"]="10_DOMAINS_FOR_VZ" end
 		@license_type=@params["panel"].match(/[0-9]{2,3}/).to_s
 		add("plesk_license") {"#{@license_type}_DOMAINS_FOR_VZ"}
 	end
 	
 	def method_missing(method,&block)
-		#self.add(:none) { Vdspool.get_veid("#{@params["VE id"]}","#{@params["node"]}") }
 		add("none") {Vdspool.get_veid("#{@params["VE id"]}","#{@params["node"]}")}
 	end
 end

@@ -11,7 +11,7 @@ require 'eventmachine'
 %w{log packetgenerator connection panel postsetup setup params revsetup licenses}.each do |file|
         require File.dirname(__FILE__) + '/virtuozzo/' + file
 end
-%w{ippool iplib servers emsync synctidy sync}.each do |file|
+%w{servers emsync synctidy sync}.each do |file|
         require File.dirname(__FILE__) + '/virtuozzo/sync/' + file
 end
 #begin

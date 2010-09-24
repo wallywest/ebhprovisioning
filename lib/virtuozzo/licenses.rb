@@ -5,7 +5,7 @@ include Virtuozzo
 		def run
 			Virtuozzo::Log::write('setting panel')
 			@params=Virtuozzo.getparams
-			@veip=@params[:mainip]
+			@veip=@params["mainip"]
 			@panel=@params["panel"]
 			@vepass=@params["password"]
 			@hostname=@params["domain"]
@@ -49,13 +49,13 @@ include Virtuozzo
 		
 		def keycreate
 			@result=@server.call("partner10.createKey",
-				@AuthInfo.new("eboundhost","#{password}"),
+				@AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
 				@ServerAddress.new([],[]),
 				'eboundhost.com',
 				'PLESK_95_FOR_VZ',
 				["#{@params["license_type"]}"]) #set variable here
 			@call=@server.call("partner10.retrieveKey",
-				@AuthInfo.new("eboundhost","#{password}"),
+				@AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
 				"#{@result['mainKeyNumber']}"
 				)
 			@license=Base64.encode64(@call['key'])

@@ -8,7 +8,7 @@ class PostSetup
 		def create
 			PanelSetup::run
 			#renable rev setup
-			#RevSetup::run(@params["mainip"],@params['domain'])
+			RevSetup::run(@params["mainip"],@params['domain'])
 			self.write 
 		end
 		def suspend
@@ -28,7 +28,7 @@ class PostSetup
 		def write
 			Vdspool.create(:vdsid => "#{@params["node"]}", :veid => "#{@params["VE id"]}", :eid =>"#{@params["eid"]}",:ips => "#{@params["mainip"]}\s#{@params["remainingips"]}")
 			Tblhosting.update(@params['accountid'],:dedicatedip => "#{@params["mainip"]}", :assignedips => "#{@params["remainingips"]}")
-			#Tblcustomfieldsvalues.update_all("value=#{@params["veid"]}",{:relid=>"#{@params["serviceid"]}",:fieldid => "#{@params["packageid"]}"})
+			Tblcustomfieldsvalues.update_all("value=#{@params["veid"]}",{:relid=>"#{@params["serviceid"]}",:fieldid => "#{@params["packageid"]}"})
 		end
 	end
 end
