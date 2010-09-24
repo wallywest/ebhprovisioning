@@ -6,8 +6,7 @@ class RevSetup
 		@ip=IPAddr.new ip
 		@reventry=@ip.reverse.sub(/[0-9]+\./,'')
                 @dip=@ip.reverse.sub(/\..*/,'')
-
-
+		Virtuozzo::Log::write("setting rdns at #{@reventry} with #{@dip} and hostname #{@hostname}")
 		Net::SSH::start('rev1.eboundhost.com','root',:password => 'fljsfuff31aznvna',:paranoid => false) do |ssh|
                 ssh.exec!("cat /root/rev/#@reventry") do |ch,stream,data|
 			data.each_line do |x|
@@ -30,6 +29,7 @@ class RevSetup
                                 @exist ? ssh.exec("sed -i s/\"#{@dip}\".*/\"#{@dip} IN PTR #{@hostname}.\"/ /root/rev/#@reventry") : ssh.exec("sed -i '/#{@cursave} IN PTR/ i\ #{@dip} IN PTR #{@hostname}.' /root/rev/#@reventry")
                                 ch.wait
 				end
+				
 				ch.do_close
                         end
                                ch.on_close do |ch|

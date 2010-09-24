@@ -6,7 +6,6 @@ class PacketGenerator
 		@nodepass=opts[0]
 		@params=Virtuozzo::getparams
 		unless @params["mode"]=='sync' 
-			puts "setting up params"
  			Virtuozzo::Log::write("#{@params}")
                
 			@hostname=@params["domain"] ||=nil

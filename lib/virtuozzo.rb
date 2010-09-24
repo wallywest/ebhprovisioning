@@ -8,7 +8,7 @@ require 'net/ping'
 require 'base64'
 require 'ipaddress'
 require 'eventmachine'
-require 'ipaadr'
+require 'ipaddr'
 
 %w{log packetgenerator connection panel postsetup setup params revsetup licenses}.each do |file|
         require File.dirname(__FILE__) + '/virtuozzo/' + file
@@ -35,7 +35,7 @@ end
                                 select("veid").order("veid DESC").limit(1).where("veid < 22000").first.veid.to_i + 1
                         end
 			def get_veid(veid,node)
-				select("id AS vdsid,eid").where("veid='#{veid}' and vdsid='#{node}'").first
+				select("id,eid").where("veid='#{veid}' and vdsid='#{node}'").first
 			end
                 end
 

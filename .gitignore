@@ -1,4 +1,4 @@
 *.log
 *.tgz
 *.xml
-revsetup.rb
+*.json

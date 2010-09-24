@@ -6,7 +6,7 @@ include Virtuozzo
 			Virtuozzo::Log::write('setting panel')
 			@params=Virtuozzo.getparams
 			@veip=@params["mainip"]
-			@panel=@params["panel"]
+			@panel=@params["panel"].downcase
 			@vepass=@params["password"]
 			@hostname=@params["domain"]
 			@details=@params["clientsdetails"]
@@ -38,6 +38,8 @@ include Virtuozzo
 		end
 	
 		def plesk
+			puts "sending plesk key info"
+			exit
 			@AuthInfo=Struct.new("AuthInfo", :login, :password)
                         @ServerAddress=Struct.new("ServerAddress", :ips,:macs)
                         #@CreationParameters=Struct.new("CreationParameters",:hwid)

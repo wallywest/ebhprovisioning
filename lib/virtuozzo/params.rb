@@ -22,8 +22,13 @@ class Params
 		instance_eval(&block)
 		self.send(mode)
 	end
-	def save_replace(k)
-		if k.downcase.match('cpanel|plesk') then @addons['panel']=k.upcase else @addons['panel']='WEBMIN' end
+	def save_replace(v)
+		if v.downcase.match('cpanel|plesk')
+			@panel=v.downcase.match('cpanel|plesk').to_s
+			@addons['panel']=@panel.upcase
+		else 
+			@addons['panel']='WEBMIN' 
+		end
         end
 	
 	def buildparam
@@ -32,7 +37,7 @@ class Params
                         if value.class==Hash
                                 value.each_pair do |k,v|
                          	 	if v.empty? or k.match('Backup|Gateway|groupid|status|lastlogin|security|credit|lastlogin|billingcid|currency|password') then @params["#{key}"].delete(k) end
-					if k.match("Choose control panel") then self.save_replace(k) end
+					if k.match("Choose control panel") then self.save_replace(v) end
 				end
 			@addons.merge!(value)
 			@params.delete(key)
@@ -45,12 +50,12 @@ class Params
 		if block.call.nil? then
 		#	p key
 		#	p block.call
-			raise "VDSID IS NOT ON THAT NODE" 
+			Virtuozzo::Log::error("key:#{key} with block #{block}")
+			raise "ERROR IN INPUT PARAMS" 
 		end
 		if block.call.class==String then @params[key.to_s]=block.call
 		elsif block.call.class==Hash then @params.merge!(block.call)
 		else 
-			p block.call.attributes
 			@params.merge!(block.call.attributes)
 		end	
 	end

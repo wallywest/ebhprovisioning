@@ -40,7 +40,6 @@ class Socket
 				end
 				if str.chomp=~/<ns4:eid>/
 					@eid=str.sub(/<\/.*>/,'').sub(/<.*>/,'').chomp
-                                	p @eid
 					@packet.actions @eid
 				end
 			end
