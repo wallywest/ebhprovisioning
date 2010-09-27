@@ -1,4 +1,4 @@
 *.log
 *.tgz
 *.xml
-*.json
+data.json
