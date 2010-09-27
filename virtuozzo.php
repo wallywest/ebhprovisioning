@@ -100,7 +100,7 @@ if ($status[0]=="Active"){
 		global $scriptpath;
 		chdir($scriptpath);
 		writeJson($params);
-		$output=shell_exec("ruby ".$scriptpath."license.rb .= 2>&1");
+		$output=shell_exec("ruby ".$scriptpath."virtuozzo.rb license .= 2>&1");
 		outputwind($output);
 		if ($output=='success') {
         	        return "success";
@@ -114,6 +114,7 @@ if ($status[0]=="Active"){
 
 if ($status[0]=="Suspended"){
 	global $scriptpath;
+        chdir($scriptpath);
 	function virtuozzo_UnsuspendAccount($params) {
 		chdir($scriptpath);
 		writeJson($params);
