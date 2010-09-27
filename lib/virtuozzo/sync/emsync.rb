@@ -68,19 +68,16 @@ class Connection < EM::Connection
 		end
 	end
 	def unbind
-	#	puts "UNBINDING"
 		EM::stop
 	end
 end
 def self.go(node,value)
-	#@packet=Virtuozzo::PacketGenerator::new("sync","#{value[1]}")
         @packet=Virtuozzo::PacketGenerator::new("#{value[1]}")
 	EM.run do
                 @data=EventMachine::connect "#{value[0]}",4433, Connection do |conn|
 			conn.packet=@packet
 		end
         end
-        #puts "EXITING EM LOOP"
 	@data.data
 end
 end

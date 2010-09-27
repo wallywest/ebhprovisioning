@@ -8,7 +8,7 @@ module Virtuozzo
 	                add("package") {Tblproducts.where("id=#{@params["packageid"]}").select("name").first.name.sub(/\-.*/,'').sub(/\s/,'').upcase}
 			add("mainip")  {Tblhosting.where("id=#{@params["serviceid"]}").select("dedicatedip").first.dedicatedip}
 			add("remainingips") {Tblhosting.where("id=#{@params["serviceid"]}").select("assignedips").first.assignedips}
-		end	
+		end
 		self.send(mode)
 	end
 	def self.method_missing(method,*args,&block)

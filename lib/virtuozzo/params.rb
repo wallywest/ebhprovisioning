@@ -25,6 +25,7 @@ class Params
 	def save_replace(v)
 		if v.downcase.match('cpanel|plesk')
 			@panel=v.downcase.match('cpanel|plesk').to_s
+			if v.match(/[0-9]{2,3}/) then @num=v.match(/[0-9]{2,3}/).to_s end
 			@addons['panel']=@panel.upcase
 		else 
 			@addons['panel']='WEBMIN' 
@@ -68,8 +69,7 @@ class Params
 	end
 	
 	def license
-		@license_type=@params["panel"].match(/[0-9]{2,3}/).to_s
-		add("plesk_license") {"#{@license_type}_DOMAINS_FOR_VZ"}
+		add("plesk_license") {"#{@num}_DOMAINS_FOR_VZ"}
 	end
 	
 	def method_missing(method,&block)

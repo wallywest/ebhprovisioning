@@ -16,7 +16,7 @@ class PacketGenerator
         	        @mainip=@params["mainip"] ||=nil
         	        @assignedip=@params["remainingips"] ||=nil
                		@name="#{@params['firstname']}"+" #{@params['lastname']}"
-               		@smem=@params[:memup] ||=nil
+               		@smem=@params["memup"] ||=nil
 			@nodepass=@params["serverpassword"].chomp ||=nil
 			case @params["mode"]
 				when 'create'
@@ -58,8 +58,6 @@ class PacketGenerator
 				@socket_list=['login','stop','destroy','end']
 			when 'suspend' 
 				@socket_list=['login','stop','disable','end']
-			#when 'sync'
-			#	@socket_list=['list','login']
 			else  
 				@socket_list=['login','undisable','start','end']
 		end

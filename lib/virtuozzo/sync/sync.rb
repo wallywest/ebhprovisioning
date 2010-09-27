@@ -4,7 +4,6 @@ module Sync
 		@serverdata={} 
 		@serverips=[]
 		@exclude=[]
-		@iplist=""
 		Virtuozzo::Sync::Servers.list(config) do |server,login|
 			@serverdata[server]=Virtuozzo::Sync::Establish::go(server,login)
 			@serverips << login[0]

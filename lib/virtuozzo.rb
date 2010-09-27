@@ -9,15 +9,22 @@ require 'base64'
 require 'ipaddress'
 require 'eventmachine'
 require 'ipaddr'
+require 'curb'
+require 'xmlrpc/client'
 
+dir=File.expand_path("virtuozzo")
 %w{log packetgenerator connection panel postsetup setup params revsetup licenses}.each do |file|
-        require File.dirname(__FILE__) + '/virtuozzo/' + file
+        require "#{dir}/#{file}"
 end
 %w{servers emsync synctidy sync}.each do |file|
-        require File.dirname(__FILE__) + '/virtuozzo/sync/' + file
+        require "#{dir}/sync/#{file}"
 end
-#begin
-@file=File.join(File.dirname(__FILE__),'..','config.xml')
+%w{plesk}.each do |file|
+	require "#{dir}/panel/#{file}"
+end
+begin
+
+@file=File.join(File.expand_path(".."),'config.xml')
 @config=XmlSimple.xml_in(@file)
 	ActiveRecord::Base.establish_connection(
                 :adapter  => "mysql2",
@@ -74,8 +81,7 @@ end
 Virtuozzo::Log::create('vzctl.log')
 Virtuozzo::Log::write("running module with mode #{ARGV[0]}")
 print Virtuozzo::setup(ARGV[0],@config)
-#print Virtuozzo::Socket::setup(Virtuozzo::PacketGenerator::new)
-#rescue Exception => e
-#	Virtuozzo::Log::error("#{e.backtrace}")
-#	puts "Error in virtuozzo: #{e}"
-#end 
+rescue Exception => e
+	Virtuozzo::Log::error("#{e.backtrace}")
+	puts "Error in virtuozzo: #{e}"
+end

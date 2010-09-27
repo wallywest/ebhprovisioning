@@ -3,7 +3,8 @@ class Synctidy
 	def eids(node,eid,veid,ips)
 		@@tnode,@@teid,@@veid,@@ips=node,eid,veid,ips
                 if Vdspool.exists?(:eid => "#{@@teid}")
-			@@query=Vdspool.first(:select => "id,veid,vdsid,exist", :conditions => "eid = '#{@@teid}'")
+			#@@query=Vdspool.first(:select => "id,veid,vdsid,exist", :conditions => "eid = '#{@@teid}'")
+			@@query=Vdspool.where("eid='#{@@teid}'").select("id,veid,vdsid,exist").first
 			Vdspool.update("#{@@query.id}",:exist =>'1')
 			 ##UPDATE DB if VEID IS MIGRATED
                 	if @@query.vdsid != @@tnode 
