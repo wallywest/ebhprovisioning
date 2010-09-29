@@ -9,7 +9,7 @@ All functions but sync use data.json to know which container options to provisio
 
 License function only sets up license for Plesk server.
 
-Sync uses server extracts all VDS server information from WHMCS and updates tables to reflect current status of all VPS's.
+Sync extracts all VDS server information from WHMCS and updates tables to reflect current status of all VPS's.
 
 
 Future Enhancements:
