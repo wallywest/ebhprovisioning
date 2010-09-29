@@ -1,0 +1,19 @@
+Provisioning scripts setup to create/destroy/suspend/unsuspend VPS containers in Virtuozzo,auto deploy/initialize control panels, and sync all current VPS's to database.
+Script interacts with WHMCS billing system which generates user data used for provisioning.  Scripts is invoked as follows
+
+ruby virtuozzo.rb #function
+
+#function options are: create,suspend,destroy,unsuspend,license,sync
+
+All functions but sync use data.json to know which container options to provision or which container to act upon.
+
+License function only sets up license for Plesk server.
+
+Sync uses server extracts all VDS server information from WHMCS and updates tables to reflect current status of all VPS's.
+
+
+Future Enhancements:
+
+Integrate auto ip provisioning
+cpanel license setup
+As the tool may or not be used more and more threaded/queue base approach will need to be added. 
