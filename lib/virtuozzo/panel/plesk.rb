@@ -52,13 +52,13 @@ class Plesk
                 #@CreationParameters=Struct.new("CreationParameters",:hwid)
                 @server=XMLRPC::Client.new2('https://ka.parallels.com:7050/',nil,900)
 		@result=@server.call("partner10.createKey",
-                                @AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
+                                @AuthInfo.new("eboundhost","#{@params["pleskapi"]}"),
                                 @ServerAddress.new([],[]),
                                 'eboundhost.com',
                                 'PLESK_95_FOR_VZ',
                                 ["#{@params["plesk_license"]}"]) #set variable here
 	        @call=@server.call("partner10.retrieveKey",
-                                @AuthInfo.new("eboundhost","fMg9xSe2Rc7jtyXWmtP00U74z2SlIe16"),
+                                @AuthInfo.new("eboundhost","#{@params["pleskapi"]}"),
                                 "#{@result['mainKeyNumber']}"
                 	       )
 		@license=Base64.encode64(@call['key'])

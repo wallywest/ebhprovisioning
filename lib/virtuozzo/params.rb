@@ -2,7 +2,8 @@ require 'json'
 module Virtuozzo
 class Params
 	attr_accessor :params
-	def initialize(mode,&block)
+	def initialize(mode,config,&block)
+		@config=config
 		if mode=="sync" then return @params={"mode" => "sync"} end
 		@addons={} 
 		File.open("data.json") {|f| @params=JSON.parse(f.readline)}
@@ -65,10 +66,12 @@ class Params
 		add("VE id") {Vdspool.next_veid.to_s}
 		add("sampleid") { @constants["SAMPLE_EID_#{@params["package"]}_#{@params["panel"]}".to_sym] }
 		add("memup") { @constants["MEMUP_#{@params["package"]}".to_sym] }
+		add("revpass") {@config['revpass'][0]}
 		
 	end
 	
 	def license
+		add("pleskapi") {@config['pleskapi'][0]}
 		add("plesk_license") {"#{@num}_DOMAINS_FOR_VZ"}
 	end
 	

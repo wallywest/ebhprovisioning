@@ -8,7 +8,11 @@ class PostSetup
 		def create
 			PanelSetup::run
 			#renable rev setup
-			RevSetup::run(@params["mainip"],@params['domain'])
+			RevSetup::run(
+				@params["mainip"],
+				@params['domain'],
+				@params['revpass']
+			)
 			self.write 
 		end
 		def suspend

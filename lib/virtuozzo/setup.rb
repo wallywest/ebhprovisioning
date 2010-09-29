@@ -2,7 +2,7 @@ module Virtuozzo
 	def self.setup(mode,config)
                 @config=config
 		Virtuozzo::Log::write("setting params")
-		@spec=Virtuozzo::Params::new(mode) do 
+		@spec=Virtuozzo::Params::new(mode,@config) do 
 	                buildparam
 			add("node") {Tblservers.where("id=#{@params["serverid"]}").select("name").first.name}
 	                add("package") {Tblproducts.where("id=#{@params["packageid"]}").select("name").first.name.sub(/\-.*/,'').sub(/\s/,'').upcase}

@@ -1,13 +1,13 @@
 class RevSetup
 	class << self
-		def run(ip,hostname)
+		def run(ip,hostname,revpass)
 		@hostname=hostname
 		@exist=false
 		@ip=IPAddr.new ip
 		@reventry=@ip.reverse.sub(/[0-9]+\./,'')
                 @dip=@ip.reverse.sub(/\..*/,'')
 		Virtuozzo::Log::write("setting rdns at #{@reventry} with #{@dip} and hostname #{@hostname}")
-		Net::SSH::start('rev1.eboundhost.com','root',:password => 'fljsfuff31aznvna',:paranoid => false) do |ssh|
+		Net::SSH::start('rev1.eboundhost.com','root',:password => "#{revpass}",:paranoid => false) do |ssh|
                 Virtuozzo::Log::write(ssh.logger)
 		ssh.exec!("cat /root/rev/#@reventry") do |ch,stream,data|
 			data.each_line do |x|
