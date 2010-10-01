@@ -29,7 +29,7 @@ class PostSetup
 		
 		def write
 			Vdspool.create(:vdsid => "#{@params["node"]}", :veid => "#{@params["VE id"]}", :eid =>"#{@params["eid"]}",:ips => "#{@params["mainip"]}\s#{@params["remainingips"]}")
-			#Tblcustomfieldsvalues.update_all("value=#{@params["veid"]}",{:relid=>"#{@params["serviceid"]}",:fieldid => "#{@params["packageid"]}"})
+			Tblcustomfieldsvalues.update_all("value=#{@params["veid"]}",{:relid=>"#{@params["serviceid"]}",:fieldid => "#{@params["packageid"]}"})
 		end
 	end
 end
