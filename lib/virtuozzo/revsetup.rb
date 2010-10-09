@@ -8,7 +8,6 @@ class RevSetup
                 @dip=@ip.reverse.sub(/\..*/,'')
 		Virtuozzo::Log::write("setting rdns at #{@reventry} with #{@dip} and hostname #{@hostname}")
 		Net::SSH::start('rev1.eboundhost.com','root',:password => "#{revpass}",:paranoid => false) do |ssh|
-                Virtuozzo::Log::write(ssh.logger)
 		ssh.exec!("cat /root/rev/#@reventry") do |ch,stream,data|
 			data.each_line do |x|
 				if x.include?('IN PTR')

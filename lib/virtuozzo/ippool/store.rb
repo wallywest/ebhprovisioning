@@ -1,4 +1,4 @@
-module Ebhpool`
+module Ebhpool
 module Store
 	def self.run(pool)
 	## TAKES AN INPUT HASH POOL THAT HAS KEYS OF CCLASSES AND VALUES OF AVAILABLE IPS. 
