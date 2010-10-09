@@ -26,7 +26,7 @@ end
 %w{gimme build store}.each do |file|
 	require "#{dir}/ippool/#{file}"
 end
-#begin
+begin
 
 @file=File.join(File.expand_path(".."),'config.xml')
 @config=XmlSimple.xml_in(@file)
@@ -81,18 +81,11 @@ end
         end
         class Tblhostingconfigoptions < ActiveRecord::Base
         end
-        class Ippool < ActiveRecord::Base
-             set_table_name 'ippool'
-             belongs_to :iprange, :class_name => 'Iprange'
-        end
-        class Iprange < ActiveRecord::Base
-              has_many :ippool, :class_name => 'Ippool'
-        end
 
 Virtuozzo::Log::create('vzctl.log')
 Virtuozzo::Log::write("running module with mode #{ARGV[0]}")
 print Virtuozzo::setup(ARGV[0],@config)
-#rescue Exception => e
-#	Virtuozzo::Log::error("#{e.backtrace}")
-#	puts "Error in virtuozzo: #{e}"
-#end
+rescue Exception => e
+	Virtuozzo::Log::error("#{e.backtrace}")
+	puts "Error in virtuozzo: #{e}"
+end
