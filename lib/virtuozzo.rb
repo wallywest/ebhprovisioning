@@ -11,6 +11,7 @@ require 'eventmachine'
 require 'ipaddr'
 require 'curb'
 require 'xmlrpc/client'
+require 'redis'
 
 dir=File.expand_path("virtuozzo")
 %w{log packetgenerator connection panel postsetup setup params revsetup licenses}.each do |file|
@@ -21,6 +22,9 @@ end
 end
 %w{plesk}.each do |file|
 	require "#{dir}/panel/#{file}"
+end
+%w{gimme build store}.each do |file|
+	require "#{dir}/ippool/#{file}"
 end
 begin
 
@@ -76,7 +80,6 @@ begin
         class Iprange < ActiveRecord::Base
               has_many :ippool, :class_name => 'Ippool'
         end
-
 
 Virtuozzo::Log::create('vzctl.log')
 Virtuozzo::Log::write("running module with mode #{ARGV[0]}")

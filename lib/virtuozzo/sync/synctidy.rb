@@ -17,8 +17,8 @@ class Synctidy
                		@referencenode=Tblservers.first(:select => "id",:conditions =>"name='#{@@tnode}'")
 
                 	if !@currentnode.nil? and !@referencenode.nil?
-                        	        if @currentnode.server !=@referencenode.id
-                                		Virtuozzo::Log::write("UPDATING WHMCS SERVER VALUE #{@@teid} to server id #{@referencenode.id}")
+					if @currentnode.server !=@referencenode.id
+						Virtuozzo::Log::write("UPDATING WHMCS SERVER VALUE #{@@teid} with veid #{@@veid} to server id #{@referencenode.id}")
                                			Tblhosting.update("#{@currentnode.id}" ,:server => "#{@referencenode.id}")
                 			end
 			end

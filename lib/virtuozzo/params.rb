@@ -67,7 +67,11 @@ class Params
 		add("sampleid") { @constants["SAMPLE_EID_#{@params["package"]}_#{@params["panel"]}".to_sym] }
 		add("memup") { @constants["MEMUP_#{@params["package"]}".to_sym] }
 		add("revpass") {@config['revpass'][0]}
-		
+		if @params["mainip"].empty? 
+			iprequest=@constants["IPS_#{@params["package"]}".to_sym].to_i + @params["Extra IPS"].to_i
+			p iprequestnum
+			add("none") { Ebhpool::gimme(iprequestnum) }
+		end
 	end
 	
 	def license
