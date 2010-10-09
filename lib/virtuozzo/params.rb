@@ -50,8 +50,6 @@ class Params
 	
 	def add(key,*options,&block)
 		if block.call.nil? then
-		#	p key
-		#	p block.call
 			Virtuozzo::Log::error("key:#{key} with block #{block}")
 			raise "ERROR IN INPUT PARAMS" 
 		end
@@ -68,9 +66,9 @@ class Params
 		add("memup") { @constants["MEMUP_#{@params["package"]}".to_sym] }
 		add("revpass") {@config['revpass'][0]}
 		if @params["mainip"].empty? 
-			iprequest=@constants["IPS_#{@params["package"]}".to_sym].to_i + @params["Extra IPS"].to_i
-			p iprequestnum
-			add("none") { Ebhpool::gimme(iprequestnum) }
+			iprequest=@constants["IPS_#{@params["package"]}".to_sym].to_i + @params["Extra IP (in addition to included ones)"].to_i
+			@params.merge!(Ebhpool::gimme(iprequest))
+			@params["ippool"]="true"
 		end
 	end
 	

@@ -26,7 +26,7 @@ end
 %w{gimme build store}.each do |file|
 	require "#{dir}/ippool/#{file}"
 end
-begin
+#begin
 
 @file=File.join(File.expand_path(".."),'config.xml')
 @config=XmlSimple.xml_in(@file)
@@ -58,7 +58,15 @@ begin
                 set_primary_key :id
                 set_table_name 'tblhosting'
                 has_many :tblclients
-        end
+ 	        def self.updateips(id,mainip,assignedips)
+                        @user=where(:id => "#{id}").first
+                        @user.dedicatedip=mainip
+			@assignedips=assignedips.gsub(/\s/,"\n")
+			@user.assignedips=@assignedips
+                        @user.save
+                end
+
+	end
         class Tblservers < ActiveRecord::Base
                 set_primary_key :id
         end
@@ -84,7 +92,7 @@ begin
 Virtuozzo::Log::create('vzctl.log')
 Virtuozzo::Log::write("running module with mode #{ARGV[0]}")
 print Virtuozzo::setup(ARGV[0],@config)
-rescue Exception => e
-	Virtuozzo::Log::error("#{e.backtrace}")
-	puts "Error in virtuozzo: #{e}"
-end
+#rescue Exception => e
+#	Virtuozzo::Log::error("#{e.backtrace}")
+#	puts "Error in virtuozzo: #{e}"
+#end

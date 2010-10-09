@@ -9,8 +9,8 @@ module Virtuozzo
 			add("mainip")  {Tblhosting.where("id=#{@params["serviceid"]}").select("dedicatedip").first.dedicatedip}
 			add("remainingips") {Tblhosting.where("id=#{@params["serviceid"]}").select("assignedips").first.assignedips}
 		end
-		exit
 		self.send(mode)
+		return 'success'
 	end
 	def self.method_missing(method,*args,&block)
 		Virtuozzo::Socket::setup

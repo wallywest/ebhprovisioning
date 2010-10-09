@@ -1,20 +1,37 @@
-module Ebhpool
+module Ebhpool`
 module Store
 	def self.run(pool)
+	## TAKES AN INPUT HASH POOL THAT HAS KEYS OF CCLASSES AND VALUES OF AVAILABLE IPS. 
+	## BREAKS DOWN THE HASH AND SETS UP LARGEST CONSECUTIVE IPS IN SORTED SETS USING REDIS
+	## THE FOLLOWING KEYS ARE SETUP AND USED
+	## KEYS | TYPE| DESCRIPTION
+	## -------------------------------------
+	## ipcount : string : total ips available
+	## cclasses : set : lists all cclasses in pool
+	## #{cclasses} : set : list all members for that variable cclass
+	## ippool : sorted set : sorted set of cclass:id values ranked via their # of highest consecutive # list
+	## #{cclasses}:id : set : all key id values in ippool sorted set
+        ## #{cclasses}:ip:#{num} : list : list of all the actual available dclasses in that list
+
 	@redis=Redis.new
 	pool.each do |cclass,iparray|
 		unless @redis.exists "#{cclass}" then setupcclass(cclass,iparray) end
         	iparray.each do |value|
     	            	@redis.sadd "temp","#{value}"
     	 	end
+		## FIND WHICH IPS HAVE BEEN USED BUT NOT VIA HAB
         	@extractips=@redis.sdiff "#{cclass}", "temp"
+		## FIND WHICH IPS HAVE BEEN GIVEN BACK TO THE POOL BUT NOT VIA HAB
         	@giveips=@redis.sdiff "temp", "#{cclass}"
         	@redis.del "temp"
+
         	if !@extractips.empty?
-        	        @redis.decrby "ipcount","#{@extractips.length}"
+        	        ##PULL USED IPS OUT OF THE POOL AND REFACTOR SORT SETS/SETS/LISTS
+			@redis.decrby "ipcount","#{@extractips.length}"
 			@extractips.each {|x| @redis.srem "#{cclass}","#{x}"}
         	        extractips(cclass)
         	elsif !@giveips.empty?
+			##ADD NEWLY FREED IPS INTO THE POOL AND REBUILD BASED ON NEW CCLASS SET
 			@currentmem=@redis.smembers "#{cclass}"
 			@redis.decrby "ipcount","#{@currentmem.length}"
 			@giveips.each { |x| @redis.sadd "#{cclass}","#{x}"}
@@ -23,6 +40,7 @@ module Store
 	end
 	end
 	def self.setupcclass(cclass,iparray)
+		##SETUP NEW CCLASS POOL 
                 @redis.sadd "cclasses","#{cclass}"
                 @g=[]
                 @counter=@redis.incr "next.#{cclass}:ip"

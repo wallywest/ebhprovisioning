@@ -1,5 +1,7 @@
 module Ebhpool
 module Build
+	#### INPUTS IPS USED BY VPS'S AND EXTRACTS THE FREE IPS.  WILL ADD IN SUPPORT TO CHECK FOR AN EXCLUDE LIST IN THE FUTURE
+	###  RETURNS BACK THE HASH USED TO INPU TO Ebh::Store::run
 	def self.pool(iplist)
 		@cclass={}
 		iplist.split(' ').each do |x|
